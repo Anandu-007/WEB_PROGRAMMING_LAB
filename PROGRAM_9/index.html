@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Validation</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .form-box {
+            background: white;
+            padding: 20px;
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 align="center">Registration and Login</h1>
+
+    <div class="container">
+
+        <!-- Registration Form -->
+        <div class="form-box">
+            <h2>Register</h2>
+
+            <form id="registerForm">
+                <input type="text" id="regName" placeholder="Name">
+                <input type="email" id="regEmail" placeholder="Email">
+                <input type="password" id="regPassword" placeholder="Password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password">
+
+                <p id="regError" class="error"></p>
+
+                <button type="submit">Register</button>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-box">
+            <h2>Login</h2>
+
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPassword" placeholder="Password">
+
+                <p id="loginError" class="error"></p>
+
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        // Registration validation
+        document.getElementById("registerForm").addEventListener("submit",
+        function(event) {
+            event.preventDefault();
+
+            let name = document.getElementById("regName").value.trim();
+            let email = document.getElementById("regEmail").value.trim();
+            let password = document.getElementById("regPassword").value;
+            let confirmPassword = document.getElementById("regConfirm").value;
+            let error = document.getElementById("regError");
+
+            error.className = "error";
+
+            if (name === "" || email === "" ||
+                password === "" || confirmPassword === "") {
+                error.innerHTML = "All fields are required!";
+            }
+            else if (!email.includes("@") || !email.includes(".")) {
+                error.innerHTML = "Enter a valid email address!";
+            }
+            else if (password.length < 8 ||
+                     !/[A-Z]/.test(password) ||
+                     !/[a-z]/.test(password) ||
+                     !/[0-9]/.test(password)) {
+                error.innerHTML =
+                    "Password must contain 8 characters, uppercase, lowercase and a number!";
+            }
+            else if (password !== confirmPassword) {
+                error.innerHTML = "Passwords do not match!";
+            }
+            else {
+                error.className = "success";
+                error.innerHTML = "Registration successful!";
+            }
+        });
+
+        // Login validation
+        document.getElementById("loginForm").addEventListener("submit",
+        function(event) {
+            event.preventDefault();
+
+            let email = document.getElementById("loginEmail").value.trim();
+            let password = document.getElementById("loginPassword").value;
+            let error = document.getElementById("loginError");
+
+            error.className = "error";
+
+            if (email === "" || password === "") {
+                error.innerHTML = "All fields are required!";
+            }
+            else if (!email.includes("@") || !email.includes(".")) {
+                error.innerHTML = "Enter a valid email address!";
+            }
+            else if (password.length < 8) {
+                error.innerHTML = "Password must contain at least 8 characters!";
+            }
+            else {
+                error.className = "success";
+                error.innerHTML = "Login form validated successfully!";
+            }
+        });
+    </script>
+
+</body>
+</html>
