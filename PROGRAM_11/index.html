@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+</head>
+<body>
+
+    <h2>Weather Information</h2>
+
+    <input type="text" id="city" placeholder="Enter city name">
+    <button onclick="getWeather()">Search</button>
+
+    <div id="result"></div>
+
+    <script>
+        async function getWeather() {
+            let city = document.getElementById("city").value.trim();
+            let result = document.getElementById("result");
+
+            if (city === "") {
+                result.innerHTML = "Please enter a city name";
+                return;
+            }
+
+            try {
+                let response = await fetch(
+                    "https://geocoding-api.open-meteo.com/v1/search?name=" +
+                    encodeURIComponent(city) + "&count=1"
+                );
+
+                let data = await response.json();
+
+                if (!data.results) {
+                    result.innerHTML = "City not found";
+                    return;
+                }
+
+                let place = data.results[0];
+
+                let weatherResponse = await fetch(
+                    "https://api.open-meteo.com/v1/forecast?latitude=" +
+                    place.latitude + "&longitude=" + place.longitude +
+                    "&current=temperature_2m,relative_humidity_2m,weather_code"
+                );
+
+                let weather = await weatherResponse.json();
+
+                let current = weather.current;
+
+                result.innerHTML =
+                    "<h3>" + place.name + "</h3>" +
+                    "<p>Temperature: " + current.temperature_2m + " °C</p>" +
+                    "<p>Humidity: " + current.relative_humidity_2m + "%</p>" +
+                    "<p>Weather Code: " + current.weather_code + "</p>";
+
+            } catch (error) {
+                result.innerHTML = "Unable to fetch weather data";
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News Feed</title>
+    <style>
+        .news {
+            border: 1px solid gray;
+            padding: 15px;
+            margin: 10px;
+        }
+
+        img {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Latest News</h2>
+
+    <button onclick="getNews()">Load News</button>
+
+    <div id="newsList"></div>
+
+    <script>
+        
+async function getNews() {
+
+    let list = document.getElementById("newsList");
+
+    list.innerHTML = "Loading news...";
+
+    try {
+        let apiKey = "d6baf23d0fc02d772440d8cb12be28cb";
+
+        let response = await fetch(
+            "https://gnews.io/api/v4/top-headlines?lang=en&max=10&apikey=" + apiKey
+        );
+
+        let data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.errors
+                ? data.errors.join(", ")
+                : "HTTP Error: " + response.status);
+        }
+
+        list.innerHTML = "";
+
+        data.articles.forEach(function(article) {
+
+            list.innerHTML += `
+                <div class="news">
+                    <h3>${article.title}</h3>
+                    <img src="${article.image || ''}" width="200">
+                    <p>${article.description || ''}</p>
+                    <p>Source: ${article.source.name}</p>
+                    <p>Date: ${article.publishedAt}</p>
+                </div>
+            `;
+
+        });
+
+    } catch (error) {
+
+        list.innerHTML = "Error: " + error.message;
+
+        console.log(error);
+    }
+}
+
+    </script>
+
+</body>
+</html>
